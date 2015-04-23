@@ -122,18 +122,18 @@ func main() {
 		etcdServers = strings.Split(etcd, ",")
 	}
 	var messageQueue queue.MessageQueue
-	messageQueue, err = queue.NewFakeQueue(storage, ip, port, etcdServers, cluster)
-	if err != nil {
-		fmt.Printf("queue init error: %s\n", err)
-		storage.Close()
-		return
-	}
-	// messageQueue, err = queue.NewUnitedQueue(storage, ip, port, etcdServers, cluster)
+	// messageQueue, err = queue.NewFakeQueue(storage, ip, port, etcdServers, cluster)
 	// if err != nil {
 	// 	fmt.Printf("queue init error: %s\n", err)
 	// 	storage.Close()
 	// 	return
 	// }
+	messageQueue, err = queue.NewUnitedQueue(storage, ip, port, etcdServers, cluster)
+	if err != nil {
+		fmt.Printf("queue init error: %s\n", err)
+		storage.Close()
+		return
+	}
 
 	var entrance entry.Entrance
 	if protocol == "http" {
@@ -202,7 +202,9 @@ func main() {
 	case <-stop:
 		// log.Printf("got signal: %v", signal)
 		adminServer.Stop()
+		log.Printf("admin server stoped.")
 		entrance.Stop()
+		log.Printf("entrance stoped.")
 	case <-entryFailed:
 		messageQueue.Close()
 	case <-adminFailed:
