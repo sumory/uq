@@ -2,18 +2,18 @@ package store
 
 import (
 	"log"
-	"time"
 
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
 )
 
+// LevelStore is the goleveldb storage
 type LevelStore struct {
-	path    string
-	db      *leveldb.DB
-	timeout time.Duration
+	path string
+	db   *leveldb.DB
 }
 
+// NewLevelStore returns a new LevelStore
 func NewLevelStore(path string) (*LevelStore, error) {
 	option := &opt.Options{Compression: opt.SnappyCompression}
 	db, err := leveldb.OpenFile(path, option)
@@ -27,6 +27,7 @@ func NewLevelStore(path string) (*LevelStore, error) {
 	return ls, nil
 }
 
+// Set implements the Set interface
 func (l *LevelStore) Set(key string, data []byte) error {
 	return l.db.Put([]byte(key), data, nil)
 
@@ -38,6 +39,7 @@ func (l *LevelStore) Set(key string, data []byte) error {
 	// return nil
 }
 
+// Get implements the Get interface
 func (l *LevelStore) Get(key string) ([]byte, error) {
 	return l.db.Get([]byte(key), nil)
 
@@ -49,6 +51,7 @@ func (l *LevelStore) Get(key string) ([]byte, error) {
 	// return data, nil
 }
 
+// Del implements the Del interface
 func (l *LevelStore) Del(key string) error {
 	return l.db.Delete([]byte(key), nil)
 
@@ -59,6 +62,7 @@ func (l *LevelStore) Del(key string) error {
 	// return nil
 }
 
+// Close implements the Close interface
 func (l *LevelStore) Close() error {
 	err := l.db.Close()
 	if err != nil {

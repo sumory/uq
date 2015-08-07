@@ -1,6 +1,8 @@
-## United Queue
+## UQ
 
-Uq is another distributed message queue. It is written in Go and has many useful features including:
+[![Build Status](https://travis-ci.org/buaazp/uq.svg)](https://travis-ci.org/buaazp/uq) [![wercker status](https://app.wercker.com/status/723a7608e0671075fed88d8f6489602a/s "wercker status")](https://app.wercker.com/project/bykey/723a7608e0671075fed88d8f6489602a) [![Build Status](https://semaphoreci.com/api/v1/projects/e157fc88-5f1a-4114-9cf5-d102913386c2/467082/shields_badge.svg)](https://semaphoreci.com/buaazp/uq) [![Coverage Status](https://coveralls.io/repos/buaazp/uq/badge.svg)](https://coveralls.io/r/buaazp/uq)
+
+Uq (also named `United Queue`, `Unique`) is another distributed message queue. It is written in Go and has many useful features including:
 
 - [multi client APIs support](#client-api)
 - [consume messages from multi lines of one topic](#topic-and-line)
@@ -32,7 +34,6 @@ Usage of ./uq:
   -ip=“127.0.0.1”: self ip/host address
   -log=“”: uq log path
   -port=8808: listen port
-  -pprof-port=8080: pprof listen port
   -protocol=“redis”: frontend interface type [redis/mc/http]
 ```
 

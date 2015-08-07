@@ -2,7 +2,6 @@ package entry
 
 import (
 	"bytes"
-	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -23,7 +22,7 @@ func init() {
 	client = new(http.Client)
 }
 
-func TestNewHttpEntry(t *testing.T) {
+func TestNewHTTPEntry(t *testing.T) {
 	Convey("Test New HTTP Entry", t, func() {
 		var err error
 		storage, err = store.NewMemStore()
@@ -33,7 +32,7 @@ func TestNewHttpEntry(t *testing.T) {
 		So(err, ShouldBeNil)
 		So(messageQueue, ShouldNotBeNil)
 
-		entrance, err = NewHttpEntry("0.0.0.0", 8801, messageQueue)
+		entrance, err = NewHTTPEntry("0.0.0.0", 8801, messageQueue)
 		So(err, ShouldBeNil)
 		So(entrance, ShouldNotBeNil)
 
@@ -129,59 +128,7 @@ func TestHttpConfirm(t *testing.T) {
 	})
 }
 
-func TestHttpStat(t *testing.T) {
-	Convey("Test Http Stat Api", t, func() {
-		req, err := http.NewRequest(
-			"GET",
-			"http://127.0.0.1:8801/v1/admin/stat/foo/x",
-			nil,
-		)
-		So(err, ShouldBeNil)
-
-		resp, err := client.Do(req)
-		So(err, ShouldBeNil)
-		So(resp.StatusCode, ShouldEqual, http.StatusOK)
-
-		body, err := ioutil.ReadAll(resp.Body)
-		So(err, ShouldBeNil)
-		var qs queue.QueueStat
-		err = json.Unmarshal(body, &qs)
-		So(err, ShouldBeNil)
-		So(qs.Name, ShouldEqual, "foo/x")
-	})
-}
-
-func TestHttpEmpty(t *testing.T) {
-	Convey("Test Http Empty Api", t, func() {
-		req, err := http.NewRequest(
-			"DELETE",
-			"http://127.0.0.1:8801/v1/admin/empty/foo/x",
-			nil,
-		)
-		So(err, ShouldBeNil)
-
-		resp, err := client.Do(req)
-		So(err, ShouldBeNil)
-		So(resp.StatusCode, ShouldEqual, http.StatusNoContent)
-	})
-}
-
-func TestHttpRemove(t *testing.T) {
-	Convey("Test Http Remove Api", t, func() {
-		req, err := http.NewRequest(
-			"DELETE",
-			"http://127.0.0.1:8801/v1/admin/rm/foo/x",
-			nil,
-		)
-		So(err, ShouldBeNil)
-
-		resp, err := client.Do(req)
-		So(err, ShouldBeNil)
-		So(resp.StatusCode, ShouldEqual, http.StatusNoContent)
-	})
-}
-
-func TestCloseHttpEntry(t *testing.T) {
+func TestCloseHTTPEntry(t *testing.T) {
 	Convey("Test Close Http Entry", t, func() {
 		entrance.Stop()
 		messageQueue = nil

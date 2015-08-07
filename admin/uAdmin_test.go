@@ -15,7 +15,7 @@ import (
 var (
 	storage      store.Storage
 	messageQueue queue.MessageQueue
-	entrance     AdminServer
+	adminServer  Administrator
 	client       *http.Client
 )
 
@@ -33,12 +33,12 @@ func TestNewAdmin(t *testing.T) {
 		So(err, ShouldBeNil)
 		So(messageQueue, ShouldNotBeNil)
 
-		entrance, err = NewAdminServer("0.0.0.0", 8800, messageQueue)
+		adminServer, err = NewUnitedAdmin("0.0.0.0", 8800, messageQueue)
 		So(err, ShouldBeNil)
-		So(entrance, ShouldNotBeNil)
+		So(adminServer, ShouldNotBeNil)
 
 		go func() {
-			entrance.ListenAndServe()
+			adminServer.ListenAndServe()
 		}()
 	})
 }
@@ -144,7 +144,7 @@ func TestAdminStat(t *testing.T) {
 
 		body, err := ioutil.ReadAll(resp.Body)
 		So(err, ShouldBeNil)
-		var qs queue.QueueStat
+		var qs queue.Stat
 		err = json.Unmarshal(body, &qs)
 		So(err, ShouldBeNil)
 		So(qs.Name, ShouldEqual, "foo/x")
@@ -183,7 +183,7 @@ func TestAdminRemove(t *testing.T) {
 
 func TestCloseAdmin(t *testing.T) {
 	Convey("Test Close Admin", t, func() {
-		entrance.Stop()
+		adminServer.Stop()
 		messageQueue.Close()
 		messageQueue = nil
 		storage = nil
